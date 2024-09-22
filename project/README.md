@@ -1,4 +1,4 @@
-# YOUR PROJECT TITLE
+# Old Times Sake
 #### Video Demo: https://youtu.be/e66NOC4JJSU
 #### Description:
 Old Times Sake is a web application designed to help elderly individuals connect with people around them, send friend requests, find activities suitable for their age, send invitations to friends for these activities, and exchange messages. The web application is designed with the elderly in mind, so I tried to make everything as simple as possible to cater to this demographic. The homepage, when the user is logged out, features a navigation bar with the app title, along with “Log In” and “Register” buttons. The header's CSS styling is adapted from a free Start Bootstrap template. Below the header, there’s a section that highlights the application's features with buttons that redirect users to each feature or the “Log In” page if the user is not logged in. Beneath that is the footer.
