@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Change Password
+{% endblock %}
+
+{% block main %}
+    <div class="container py-5">
+        <form action="/change" method="post">
+        <!--Current password input field-->
+            <div class="mb-3">
+                <input class="form-control mx-auto w-auto" name="current_pass" placeholder="Current Password" type="password" required>
+            </div>
+        <!--New password input field-->
+            <div class="mb-3">
+                <input class="form-control mx-auto w-auto" name="password" placeholder="New Password" type="password" required>
+            </div>
+        <!--Password confirmation input field-->
+            <div class="mb-3">
+                <input class="form-control mx-auto w-auto" name="confirmation" placeholder="Confirm Password" type="password" required>
+            </div>
+        <!--Change password button-->
+            <button class="btn btn-primary" type="submit">Change Password</button>
+        </form>
+    </div>
+{% endblock %}

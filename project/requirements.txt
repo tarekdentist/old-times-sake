@@ -1,0 +1,6 @@
+cs50
+Flask
+Flask-Session
+Cloudinary
+Google Places API
+Google Places API (New)

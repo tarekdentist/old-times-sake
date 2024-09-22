@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Invitations
+{% endblock %}
+
+{% block main %}
+
+<!-- Media Object element from Bootstrap in a Card's body -->
+    {% if invitations %}
+        <div class="container py-5">
+            {% for invitation in invitations %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                {% if invitation.image_url %}
+                                    <img src="{{ invitation.image_url }}" alt="Profile Picture" class="img-thumbnail" style="width: 64px; height: 64px;">
+                                {% else %}
+                                    <img src="/static/blank.png" alt="Profile Picture" class="img-thumbnail" style="width: 64px; height: 64px;">
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1 d-flex justify-content-between align-items-center ms-3">
+                                <div>
+                                    <b>{{ invitation.first_name }} {{ invitation.last_name }}</b> invited you to <b>{{ invitation.place_name }}</b>.
+                                </div>
+                                <div>
+                                    <form method="post" action="/invitations" class="request-form">
+                                        <input type="hidden" name="invitation_id" value="{{ invitation.invitation_id }}">
+                                        <button type="submit" name="action" value="accept" class="btn btn-success btn-sm action-button">Accept</button>
+                                        <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm action-button">Reject</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-secondary container py-3 px-4 my-4" role="alert">
+            You don't have any invitations yet!
+        </div>
+    {% endif %}
+
+    <script>
+    // Change the appearance of the buttons dynamically when the user clicks on them
+    // Got help by ChatGPT for properly sending the request to the server
+        document.querySelectorAll('form.request-form').forEach(form => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const formData = new FormData(form);
+                const actionButton = event.submitter;
+
+                formData.set('action', actionButton.value); // Explicitly set the action in the FormData
+
+            // Send the request using Fetch API
+                fetch('/invitations', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => {
+                    if (response.ok) {
+                    // Update button styles and text only if the request was successful
+                        if (actionButton.value === 'accept') {
+                            actionButton.classList.remove('btn-success');
+                            actionButton.classList.add('btn-secondary');
+                            actionButton.textContent = 'Accepted';
+                        } else if (actionButton.value === 'reject') {
+                            actionButton.classList.remove('btn-danger');
+                            actionButton.classList.add('btn-secondary');
+                            actionButton.textContent = 'Rejected';
+                        }
+
+                    // Disable buttons after submission
+                        form.querySelectorAll('button').forEach(btn => {
+                            btn.disabled = true;
+                        });
+                    } else {
+                        console.error('Failed to update the request status.');
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    </script>
+
+{% endblock %}

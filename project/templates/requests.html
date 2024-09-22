@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Requests
+{% endblock %}
+
+{% block main %}
+
+<!-- Media Object element from Bootstrap in a Card's body -->
+    {% if requests %}
+        <div class="container py-5">
+            {% for request in requests %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                {% if request.image_url %}
+                                    <img src="{{ request.image_url }}" alt="Profile Picture" class="img-thumbnail" style="width: 64px; height: 64px;">
+                                {% else %}
+                                    <img src="/static/blank.png" alt="Profile Picture" class="img-thumbnail" style="width: 64px; height: 64px;">
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1 d-flex justify-content-between align-items-center ms-3">
+                                <div class="text-start">
+                                    <h5>{{ request.first_name }} {{ request.last_name}}</h5>
+                                    <b>Age:</b> {{ request.age }} <b>Gender:</b> {{ request.gender }} <br> <b>Country:</b> {{ request.country }} <b>City:</b> {{ request.city }} <br> <b>Interests:</b> {{ request.interests }}
+                                </div>
+                                <div>
+                                    <form method="post" action="/requests" class="request-form">
+                                        <input type="hidden" name="request_id" value="{{ request.request_id }}">
+                                        <button type="submit" name="action" value="accept" class="btn btn-success btn-sm action-button">Accept</button>
+                                        <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm action-button">Reject</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-secondary container py-3 px-4 my-4" role="alert">
+            You don't have any requests yet!
+        </div>
+    {% endif %}
+
+    <script>
+    // Change the appearance of the buttons dynamically when the user clicks on them
+    // Got help by ChatGPT for properly sending the request to the server
+        document.querySelectorAll('form.request-form').forEach(form => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const formData = new FormData(form);
+                const actionButton = event.submitter;
+
+                formData.set('action', actionButton.value); // Explicitly set the action in the FormData
+
+            // Send the request using Fetch API
+                fetch('/requests', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => {
+                    if (response.ok) {
+                    // Update button styles and text only if the request was successful
+                        if (actionButton.value === 'accept') {
+                            actionButton.classList.remove('btn-success');
+                            actionButton.classList.add('btn-secondary');
+                            actionButton.textContent = 'Accepted';
+                        } else if (actionButton.value === 'reject') {
+                            actionButton.classList.remove('btn-danger');
+                            actionButton.classList.add('btn-secondary');
+                            actionButton.textContent = 'Rejected';
+                        }
+
+                    // Disable buttons after submission
+                        form.querySelectorAll('button').forEach(btn => {
+                            btn.disabled = true;
+                        });
+                    } else {
+                        console.error('Failed to update the request status.');
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    </script>
+
+{% endblock %}

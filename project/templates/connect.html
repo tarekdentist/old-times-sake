@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Connect
+{% endblock %}
+
+{% block main %}
+    <div class="container py-5">
+        <h4>Filter By:</h4>
+        <div class="btn-group mb-4" role="group">
+
+        <!-- Country Button -->
+
+            <input type="radio" class="btn-check" name="option" id="countryButton" autocomplete="off" checked>
+            <label class="btn btn-secondary" for="countryButton">Country</label>
+
+        <!-- City Button -->
+
+            <input type="radio" class="btn-check" name="option" id="cityButton" autocomplete="off">
+            <label class="btn btn-secondary" for="cityButton">City</label>
+        </div>
+
+    <!-- list of users by country -->
+
+        <div id="countryList" style="display: block;">
+            <div class="row">
+                {% for receiver in receivers_country %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card" style="width: 100%;">
+                            {% if receiver.image_url %}
+                                <img src="{{ receiver.image_url }}" class="card-img-top" alt="Profile Picture">
+                            {% else %}
+                                <img src="/static/blank.png" class="card-img-top" alt="Profile Picture">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ receiver.first_name }} {{ receiver.last_name }}</h5>
+                                <p class="card-text"><b>Age: </b>{{ receiver.age }}</p>
+                                <p class="card-text"><b>Gender: </b>{{ receiver.gender }}</p>
+                                <p class="card-text"><b>Interests: </b>{{ receiver.interests }}</p>
+                                <p class="card-text"><b>City: </b>{{ receiver.city }}</p>
+                                <form method="post" action="/connect">
+                                    <input type="hidden" name="receiver_id" value="{{ receiver.id }}">
+                                    <button type="submit" class="btn btn-primary">Connect</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    <!-- list of users by city -->
+
+        <div id="cityList" style="display: none;">
+            <div class="row">
+                {% for receiver in receivers_city %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card" style="width: 100%;">
+                            {% if receiver.image_url %}
+                                <img src="{{ receiver.image_url }}" class="card-img-top" alt="Profile Picture">
+                            {% else %}
+                                <img src="/static/blank.png" class="card-img-top" alt="Profile Picture">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ receiver.first_name }} {{ receiver.last_name }}</h5>
+                                <p class="card-text"><b>Age: </b>{{ receiver.age }}</p>
+                                <p class="card-text"><b>Gender: </b>{{ receiver.gender }}</p>
+                                <p class="card-text"><b>Interests: </b>{{ receiver.interests }}</p>
+                                <p class="card-text"><b>City: </b>{{ receiver.city }}</p>
+                                <form method="post" action="/connect">
+                                    <input type="hidden" name="receiver_id" value="{{ receiver.id }}">
+                                    <button type="submit" class="btn btn-primary" id="connect-{{ receiver.id }}">Connect</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+<!-- Dynamically show the users based on the filter the user selects -->
+    <script>
+        document.getElementById('countryButton').addEventListener('click', function() {
+            document.getElementById('countryList').style.display = 'block';
+            document.getElementById('cityList').style.display = 'none';
+        });
+
+        document.getElementById('cityButton').addEventListener('click', function() {
+            document.getElementById('countryList').style.display = 'none';
+            document.getElementById('cityList').style.display = 'block';
+        });
+
+    // By CS50.ai
+
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                const button = form.querySelector('button');
+                button.classList.remove('btn-primary');
+                button.classList.add('btn-secondary');
+                button.textContent = 'Sent!';
+
+                const formData = new FormData(form);
+                fetch('/connect', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => {
+                // Handle the response if needed
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Messages
+{% endblock %}
+
+{% block main %}
+    {% if messages %}
+        <div class="container py-5">
+            {% for message in messages %}
+    <!-- Card for displaying each message -->
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                <!-- Display sender's profile picture or a placeholder if not available -->
+                            <div class="flex-shrink-0">
+                                {% if message.image_url %}
+                                    <img src="{{ message.image_url }}" alt="Profile Picture" class="img-thumbnail" style="width: 64px; height: 64px;">
+                                {% else %}
+                                    <img src="/static/blank.png" alt="Profile Picture" class="img-thumbnail" style="width: 64px; height: 64px;">
+                                {% endif %}
+                            </div>
+                <!-- Display sender's name, message content, and timestamp -->
+                            <div class="flex-grow-1 d-flex justify-content-between align-items-center ms-3">
+                                <div class="text-start">
+                                    <h5>{{ message.first_name }} {{ message.last_name }} sent you a message!</h5>
+                                    <b>Message:</b> {{ message.message }} <br>
+                                    <small class="text-muted">{{ message.timestamp }}</small>
+                                </div>
+                    <!-- Button to open the reply modal -->
+                                <div>
+                                    <button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#modal-{{ message.id }}">
+                                        Reply
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+        <!-- Modal for replying to the message -->
+                    <div class="modal fade" id="modal-{{ message.id }}" tabindex="-1" aria-labelledby="label-{{ message.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="label-{{ message.id }}">Reply</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                        <!-- Form for entering the reply message -->
+                                    <form id="message-form-{{ message.id }}">
+                                        <input type="hidden" name="friend_id" value="{{ message.id }}">
+                                        <div class="mb-3">
+                                            <label for="message-text-{{ message.id }}" class="col-form-label">Message:</label>
+                                            <textarea class="form-control" name="message" id="message-text-{{ message.id }}"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <!-- Button to send the reply message -->
+                                    <button type="button" class="btn btn-primary" onclick="sendMessage('{{ message.id }}')">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+<!-- Alert if there are no messages -->
+        <div class="alert alert-secondary container py-3 px-4 my-4" role="alert">
+            You don't have any messages yet!
+        </div>
+    {% endif %}
+
+    <script>
+    // Function to handle sending a reply message
+        function sendMessage(messageId) {
+            const form = document.getElementById(`message-form-${messageId}`);
+            const messageText = document.getElementById(`message-text-${messageId}`).value.trim();
+
+        // Check if the message is empty
+            if (messageText === "") {
+                const messageContainer = document.createElement('div');
+                messageContainer.className = 'alert alert-danger';
+                messageContainer.textContent = 'Message cannot be empty.';
+                form.parentNode.insertBefore(messageContainer, form);
+                return;
+            }
+
+            const formData = new FormData(form);
+
+        // Send the message using fetch API
+            fetch('/messages', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const messageContainer = document.createElement('div');
+                    if (data.success) {
+                        messageContainer.className = 'alert alert-success';
+                        messageContainer.textContent = 'Message sent successfully!';
+                    } else {
+                        messageContainer.className = 'alert alert-danger';
+                        messageContainer.textContent = 'Failed to send message.';
+                    }
+                    form.parentNode.insertBefore(messageContainer, form);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+
+{% endblock %}

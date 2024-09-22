@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block main %}
+    <div class="container py-5">
+        <form action="/login" method="post" class="needs-validation" novalidate>
+
+        <!-- Username input field -->
+            <div class="mb-3">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="username" placeholder="Username" type="text" required>
+                <div class="invalid-feedback">
+                    Please provide a username.
+                </div>
+            </div>
+
+        <!-- Password input field -->
+            <div class="mb-3">
+                <input class="form-control mx-auto w-auto" name="password" placeholder="Password" type="password" required>
+                <div class="invalid-feedback">
+                    Please provide a password.
+                </div>
+
+            <!-- Log in and Sign Up buttons -->
+            </div>
+            <button class="btn btn-primary mb-2" type="submit">Log In</button>
+            <div class="text-center mb-2">or</div>
+            <a href="/register" class="btn btn-secondary">Sign Up</a>
+        </form>
+    </div>
+
+    <script>
+    // Bootstrap validation for disabling form submissions if there are invalid fields
+        (function() {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+
+            Array.prototype.slice.call(forms)
+                .forEach(function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+{% endblock %}

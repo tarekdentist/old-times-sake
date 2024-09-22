@@ -1,0 +1,67 @@
+/* Header styling from https://startbootstrap.com/ free template */
+  header.masthead {
+    position: relative;
+    background-color: #343a40;
+    /* Free image on Pixabay https://pixabay.com/photos/elderly-forest-trekking-women-6806996/ */
+    background: url("elderly.jpg") no-repeat center center;
+    background-size: cover;
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+    width: 100%;
+  }
+
+  header.masthead:before {
+    content: "";
+    position: absolute;
+    background-color: #1c375e;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+  }
+
+  header.masthead h1, header.masthead h2 {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    color: white;
+}
+
+header.masthead h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+header.masthead h2 {
+    font-size: 2.1rem;
+    font-weight: bold;
+}
+
+  @media (min-width: 768px) {
+    header.masthead {
+      padding-top: 12rem;
+      padding-bottom: 12rem;
+    }
+
+.activity_img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+p, a, h1 {
+  font-family: 'Montserrat', sans-serif;
+  color: #000;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+footer p {
+  color: white;
+}

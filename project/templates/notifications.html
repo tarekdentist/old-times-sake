@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Invitations
+{% endblock %}
+
+{% block main %}
+
+<!-- Media Object element from Bootstrap in a Card's body -->
+    {% if notifications %}
+        <div class="container py-5">
+            {% for notification in notifications %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0">
+                                {% if notification.image_url %}
+                                    <img src="{{ notification.image_url }}" alt="Profile Picture" class="img-thumbnail" style="width: 64px; height: 64px;">
+                                {% else %}
+                                    <img src="/static/blank.png" alt="Profile Picture" class="img-thumbnail" style="width: 64px; height: 64px;">
+                                {% endif %}
+                            </div>
+                            <div class="flex-grow-1 d-flex justify-content-between align-items-center ms-3">
+                                <div>
+                                    {% if notification.status == 'accepted' %}
+                                        <b>{{ notification.first_name }} {{ notification.last_name }}</b> has accepted your invite to go to <b>{{ notification.place_name }}</b>.
+                                    {% elif notification.status == 'rejected' %}
+                                        Unfortuantely, <b>{{ notification.first_name }} {{ notification.last_name }}</b> is unable to go to <b>{{ notification.place_name }}</b> at this time.
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-secondary container py-3 px-4 my-4" role="alert">
+            You don't have any notifications yet!
+        </div>
+    {% endif %}
+
+{% endblock %}

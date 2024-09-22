@@ -1,0 +1,195 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    <div class="container py-5">
+        <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+            <form action="/register" method="post" enctype="multipart/form-data" class="needs-validation" novalidate style="max-width: 400px; width: 100%;">
+
+            <!--First name input field-->
+                <div class="mb-3">
+                    <label for="validationCustomFirstName" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="validationCustomFirstName" name="first_name" placeholder="First Name" required>
+                    <div class="invalid-feedback">
+                        Please provide your first name.
+                    </div>
+                </div>
+
+            <!--Last name input field-->
+                <div class="mb-3">
+                    <label for="validationCustomLastName" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="validationCustomLastName" name="last_name" placeholder="Last Name" required>
+                    <div class="invalid-feedback">
+                        Please provide your last name.
+                    </div>
+                </div>
+
+            <!--Username input field-->
+                <div class="mb-3">
+                    <label for="validationCustomUsername" class="form-label">Username</label>
+                    <div class="input-group has-validation">
+                        <input type="text" class="form-control" id="validationCustomUsername" name="username" placeholder="Username" required>
+                        <div class="invalid-feedback">
+                            Please choose a username.
+                        </div>
+                    </div>
+                </div>
+
+            <!--Password input field-->
+                <div class="mb-3">
+                    <label for="validationCustomPassword" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="validationCustomPassword" name="password" placeholder="Password" required minlength="6">
+                    <div class="invalid-feedback">
+                        Please provide a password with at least 6 characters.
+                    </div>
+                </div>
+
+            <!--Password confirmation input field-->
+                <div class="mb-3">
+                    <label for="validationCustomConfirmation" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="validationCustomConfirmation" name="confirmation" placeholder="Confirm Password" required minlength="6">
+                    <div class="invalid-feedback">
+                        Please confirm your password.
+                    </div>
+                </div>
+
+            <!--Birthday input field-->
+                <div class="mb-3">
+                    <label for="validationCustomBirthdate" class="form-label">Birthdate</label>
+                    <input type="date" class="form-control" id="validationCustomBirthdate" name="birthdate" placeholder="Birthdate" required max="">
+                    <div class="invalid-feedback">
+                        Please provide a valid birthdate.
+                    </div>
+                </div>
+
+            <!--Country list-->
+                <div class="mb-3">
+                    <label for="validationCustomCountry" class="form-label">Country</label>
+                    <select id="country-select" class="form-select" name="country" id="validationCustomCountry" required>
+                        <option value="">Select a country</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Please select a valid country.
+                    </div>
+                </div>
+
+            <!--City input field-->
+                <div class="mb-3">
+                    <label for="validationCustomCity" class="form-label">City</label>
+                    <input type="text" class="form-control" id="validationCustomCity" name="city" placeholder="City" required>
+                    <div class="invalid-feedback">
+                        Please provide a valid city.
+                    </div>
+                </div>
+
+            <!--Gender List-->
+                <div class="mb-3">
+                    <label for="validationCustomGender" class="form-label">Gender</label>
+                    <select class="form-select" name="gender" id="validationCustomGender" required>
+                        <option disabled selected value="">Gender</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Prefer not to say</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Please select a gender.
+                    </div>
+                </div>
+                
+                <!--Interests input fields-->
+                    <div class="mb-3">
+                        <label for="validationCustomInterests" class="form-label">Interests</label>
+                        <div id="interests-container">
+                            <input type="text" class="form-control mb-2" id="interest1" name="interests[]" placeholder="Interest 1" required>
+                            <input type="text" class="form-control mb-2" id="interest2" name="interests[]" placeholder="Interest 2" required>
+                            <input type="text" class="form-control mb-2" id="interest3" name="interests[]" placeholder="Interest 3" required>
+                        </div>
+                        <div class="invalid-feedback">
+                            Please provide your interests.
+                        </div>
+                    </div>
+
+                <!--Image upload-->
+                    <div class="mb-3">
+                        <label for="validationCustomProfilePicture" class="form-label">Profile Picture</label>
+                        <input type="file" class="form-control" id="validationCustomProfilePicture" name="profile_picture" accept="image/*">
+                        <div class="invalid-feedback">
+                            Please upload an image file.
+                        </div>
+                    </div>
+
+                <!--Register button-->
+                    <div class="mb-3">
+                        <button class="btn btn-primary w-100" type="submit">Register</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+    // API to provide the list of countries by CS50.ai
+
+            fetch('https://restcountries.com/v3.1/all')
+                .then(response => response.json())
+                .then(data => {
+            // Sort the countries alphabetically by their common name
+                    data.sort((a, b) => a.name.common.localeCompare(b.name.common));
+
+            // Get the select element
+                    const select = document.getElementById('country-select');
+
+            // Loop through the sorted data and create option elements
+                    data.forEach(country => {
+                        const option = document.createElement('option');
+                        option.value = country.name.common;
+                        option.textContent = country.name.common;
+                        select.appendChild(option);
+                    });
+                });
+
+    // By Bootstrap for disabling form submissions if there are invalid fields
+
+            (function() {
+                'use strict'
+                var forms = document.querySelectorAll('.needs-validation')
+
+                Array.prototype.slice.call(forms)
+                    .forEach(function(form) {
+                        form.addEventListener('submit', function(event) {
+                            if (!form.checkValidity()) {
+                                event.preventDefault()
+                                event.stopPropagation()
+                            }
+
+                            form.classList.add('was-validated')
+                        }, false)
+                    })
+            })()
+
+    // Checking if passwords match
+
+            function validatePasswords() {
+                const password = document.getElementById('validationCustomPassword');
+                const confirmation = document.getElementById('validationCustomConfirmation');
+
+                if (password.value !== confirmation.value) {
+                    confirmation.setCustomValidity("Passwords do not match.");
+                } else {
+                    confirmation.setCustomValidity("");
+                }
+            }
+            document.getElementById('validationCustomPassword').addEventListener('input', validatePasswords);
+            document.getElementById('validationCustomConfirmation').addEventListener('input', validatePasswords);
+
+    // Set the max attribute dynamically for the birthdate input to the new date everyday to make sure users are at least 50 years old
+    // By CS50.ai
+
+            const today = new Date();
+            const maxDate = new Date(today.getFullYear() - 50, today.getMonth(), today.getDate());
+            document.getElementById('validationCustomBirthdate').max = maxDate.toISOString().split('T')[0];
+        </script>
+
+{% endblock %}

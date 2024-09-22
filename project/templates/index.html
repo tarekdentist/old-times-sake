@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Hello
+{% endblock %}
+
+{% block main %}
+
+    <header class="masthead">
+        <div class="container position-relative">
+            <div class="row justify-content-center">
+                <div class="col-xl-6">
+                    <div class="text-center text-white">
+                    <!-- Subheading -->
+                        <h2 class="mb-5">Connect with a Community That Understands You and Discover New Experiences Together</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+<!-- Features Section -->
+    <section id="features" class="py-5 bg-light">
+        <div class="container">
+            <div class="row text-center">
+            <!-- Feature 1 -->
+                <div class="col-lg-4 mb-4 d-flex flex-column align-items-center">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-people-fill fs-1 text-primary"></i>
+                    </div>
+                    <h3 class="h4">Find Like-Minded Individuals</h3>
+                    <p class="text-muted">
+                        Discover people in your city or country and connect with those who share your interests.
+                    </p>
+                    <a href="/connect" class="btn btn-primary mt-auto">Connect</a>
+                </div>
+            <!-- Feature 2 -->
+                <div class="col-lg-4 mb-4 d-flex flex-column align-items-center">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-calendar-event-fill fs-1 text-primary"></i>
+                    </div>
+                    <h3 class="h4">Browse Through Activities</h3>
+                    <p class="text-muted">
+                        Find exciting new activities and experiences around you, and invite your friends to join in the fun.
+                    </p>
+                    <a href="/activities" class="btn btn-primary mt-auto">Explore Activities</a>
+                </div>
+            <!-- Feature 3 -->
+                <div class="col-lg-4 mb-4 d-flex flex-column align-items-center">
+                    <div class="feature-icon mb-3">
+                        <i class="bi bi-chat-dots-fill fs-1 text-primary"></i>
+                    </div>
+                    <h3 class="h4">Engage with Friends</h3>
+                    <p class="text-muted">
+                        Send messages and engage in meaningful conversations with the community.
+                    </p>
+                    <a href="/friends" class="btn btn-primary mt-auto">Engage</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="bg-dark text-white py-3">
+        <div class="container text-center">
+            <p class="mb-0">Made by Tarek Ismail for CS50!</p>
+        </div>
+    </footer>
+
+{% endblock %}

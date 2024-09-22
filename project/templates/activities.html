@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Activities
+{% endblock %}
+
+{% block main %}
+    {% if places %}
+        <div class="container py-4">
+            <h1>Activities in {{ city }}, {{ country }}</h1>
+            <div class="row mt-4">
+                {% for place in places %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card" style="width: 18rem;">
+                <!-- Display the photo-->
+                            <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=3000&photoreference={{ place.photos[0].photo_reference }}&key=AIzaSyCnfQ40PSkb6C2NYj_22FCEFJlhzIglF_o" class="activity_img" alt="{{ place.name }}">
+                            <div class="card-body">
+                    <!-- Display the name of the place -->
+                                <h5 class="card-title">{{ place.name }}</h5>
+                    <!-- Display the rating -->
+                                <p class="card-text"><b>Rating:</b> {{ place.rating }} ({{ place.user_ratings_total }} reviews)</p>
+                    <!-- Display the address -->
+                                <p class="card-text"><b>Address:</b> {{ place.formatted_address }}</p>
+                    <!-- Display the accessibility -->
+                                <p class="card-text"> <i class="bi bi-person-wheelchair"></i> <b>Accessibility:</b> {{ place.wheelchair_accessible_entrance }}</p>
+                    <!-- Display if the place is open or not -->
+                                {% if place.opening_hours and place.opening_hours.open_now %}
+                                    <p class="card-text"><b>Status:</b> Open Now</p>
+                                {% else %}
+                                    <p class="card-text"><b>Status:</b> Closed </p>
+                                {% endif %}
+                    <!-- Link to Google Maps -->
+                                <div class="mb-1">
+                                    <a href="https://maps.google.com/?q={{ place.geometry.location.lat }},{{ place.geometry.location.lng }}" class="btn btn-primary">View on Map</a>
+                                </div>
+                    <!-- Button to open modal -->
+                                <button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#modal-{{ place.place_id }}">
+                                    Invite Friend
+                                </button>
+
+                    <!-- Modal -->
+                                <div class="modal fade" id="modal-{{ place.place_id }}" tabindex="-1" aria-labelledby="label-{{ place.place_id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="label-{{ place.name }}">Choose Friend</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="/activities" method="post">
+                                                    <input type="hidden" name="place_name" value="{{ place.name }}">
+                                                    {% if users %}
+                                                        <ul class="list-group">
+                                                            {% for user in users %}
+                                                                <li class="list-group-item">
+                                                                    <input class="form-check-input me-1" name="user_ids[]" type="checkbox" value="{{ user.id }}" id="checkbox-{{ user.id }}">
+                                                                    <label class="form-check-label" for="checkbox-{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</label>
+                                                                </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    {% else %}
+                                                        <div class="alert alert-secondary" role="alert">
+                                                            You don't have any friends yet!
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    {% if users %}
+                                                        <button type="submit" class="btn btn-primary">Send Invite</button>
+                                                    {% endif %}
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-secondary container py-3 px-4 my-4" role="alert">
+            No activities available for your current location yet!
+        </div>
+    {% endif %}
+{% endblock %}

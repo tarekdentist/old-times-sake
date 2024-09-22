@@ -1,0 +1,73 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Profile
+{% endblock %}
+
+{% block main %}
+    <div class="container py-5">
+    <!-- Form for updating profile picture -->
+        <form action="/profile" method="POST" enctype="multipart/form-data">
+            <div class="row">
+            <!-- Display user's first name -->
+                <div class="col">
+                    <p class="text-start"><b>First Name: </b>{{ first_name }}</p>
+                </div>
+            </div>
+            <div class="row">
+            <!-- Display user's last name -->
+                <div class="col">
+                    <p class="text-start"><b>Last Name: </b>{{ last_name }}</p>
+                </div>
+            </div>
+            <div class="row">
+            <!-- Display user's username -->
+                <div class="col">
+                    <p class="text-start"><b>Username: </b>{{ username }}</p>
+                </div>
+            </div>
+            <div class="row">
+            <!-- Display user's profile picture or a placeholder if none exists -->
+                <div class="col text-start">
+                    <p class="text-start"><b>Profile Picture: </b>
+                        {% if image_url %}
+                    <!-- Show the current profile picture if available -->
+                            <img src="{{ image_url }}" alt="Profile Picture" class="img-thumbnail" style="width: 64px; height: 64px;">
+                        {% else %}
+                    <!-- Show a blank placeholder image if no profile picture is uploaded -->
+                            <img src="/static/blank.png" alt="Profile Picture" class="img-thumbnail" style="width: 64px; height: 64px;">
+                        {% endif %}
+                    <!-- File input for uploading a new profile picture -->
+                        <input type="file" name="profile_picture" id="profile-picture">
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+            <!-- Display user's country -->
+                <div class="col">
+                    <p class="text-start"><b>Country: </b>{{ country }}</p>
+                </div>
+            </div>
+            <div class="row">
+            <!-- Display user's city -->
+                <div class="col">
+                    <p class="text-start"><b>City: </b>{{ city }}</p>
+                </div>
+            </div>
+            <div class="row text-start">
+            <!-- Changing the password -->
+                <div class="col-1">
+                    <p class="fw-bold text-start">Password:</p>
+                </div>
+                <div class="col-4">
+                <!-- Link to change password page -->
+                    <a href="/change" class="btn btn-primary btn-sm">Change Password</a>
+                </div>
+            </div>
+        <!-- Button to save the changes made in the form -->
+            <div>
+                <button class="btn btn-primary" type="submit">Save Changes</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Friends
+{% endblock %}
+
+{% block main %}
+    {% if friends %}
+<!--Card with each friend's info-->
+        <div class="container py-5">
+            <div class="row">
+                {% for friend in friends %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card" style="width: 100%;">
+                            {% if friend.image_url %}
+                                <img src="{{ friend.image_url }}" class="card-img-top" alt="Profile Picture">
+                            {% else %}
+                                <img src="/static/blank.png" class="card-img-top" alt="Profile Picture">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ friend.first_name }} {{ friend.last_name }}</h5>
+                                <p class="card-text"><b>Age: </b>{{ friend.age }}</p>
+                                <p class="card-text"><b>Gender: </b>{{ friend.gender }}</p>
+                                <p class="card-text"><b>Country: </b>{{ friend.country }}</p>
+                                <p class="card-text"><b>City: </b>{{ friend.city }}</p>
+                                <p class="card-text"><b>Interests: </b>{{ friend.interests }}</p>
+                                <button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#modal-{{ friend.id }}">
+                                    Send a Message
+                                </button>
+                            </div>
+                        </div>
+
+            <!-- Modal -->
+                        <div class="modal fade" id="modal-{{ friend.id }}" tabindex="-1" aria-labelledby="label-{{ friend.id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="label-{{ friend.id }}">Send a Message</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="message-form-{{ friend.id }}">
+                                            <input type="hidden" name="friend_id" value="{{ friend.id }}">
+                                            <div class="mb-3">
+                                                <label for="message-text-{{ friend.id }}" class="col-form-label">Message:</label>
+                                                <textarea class="form-control" name="message" id="message-text-{{ friend.id }}"></textarea>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" onclick="sendMessage('{{ friend.id }}')">Send</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-secondary container py-3 px-4 my-4" role="alert">
+            You don't have any friends yet!
+        </div>
+    {% endif %}
+
+<!--Used CS50 Debugger for showing for keeping the user on the page and showing a feedback message in the modal-->
+    <script>
+        function sendMessage(friendId) {
+            const form = document.getElementById(`message-form-${friendId}`);
+            const messageText = document.getElementById(`message-text-${friendId}`).value.trim();
+
+            if (messageText === "") {
+            // Create and display an error message if the message is empty
+                const messageContainer = document.createElement('div');
+                messageContainer.className = 'alert alert-danger';
+                messageContainer.textContent = 'Message cannot be empty.';
+                form.parentNode.insertBefore(messageContainer, form);
+                return;
+            }
+
+            const formData = new FormData(form);
+
+            fetch('/friends', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const messageContainer = document.createElement('div');
+                    if (data.success) {
+                        messageContainer.className = 'alert alert-success';
+                        messageContainer.textContent = 'Message sent successfully!';
+                    } else {
+                        messageContainer.className = 'alert alert-danger';
+                        messageContainer.textContent = 'Failed to send message.';
+                    }
+                    form.parentNode.insertBefore(messageContainer, form);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+{% endblock %}
